@@ -1,6 +1,8 @@
 class Node {
 	constructor(data) {
 		this.data = data;
+		this.visited = false;
+		this.dest = Number.MAX_SAFE_INTEGER;
 		this.nextElement = null;
 	}
 }
@@ -203,32 +205,48 @@ class Graph {
 
 function checkProbability(P, V, returning) {
 	const computedPropability = Math.random();
-	if (P >= computedPropability || returning) return parseInt(Math.random() * (V - 1) + 1);
+	if (P >= computedPropability || returning) return Math.floor(Math.random() * V);
 	return null;
 }
 
 const createGraph = (P, V) => {
 	const res = checkProbability(P, V);
-	if (!res) return console.log('prob not good');
+	if (!res) return console.log('not enoght cluck, try again');
 	const graph = new Graph(V);
-	for (let i = 0; i < V; i++) {
+	for (let i = 1; i < V + 1; i++) {
 		const source = checkProbability(P, V, true);
 		const destination = checkProbability(P, V, true);
 		graph.addEdge(source, destination);
 	}
 	return graph;
 };
+
+const BreadthFirstSearch = (graph) => {
+	let queue = [];
+	[0, 3, 4];
+	0;
+
+	let prevNode = graph.list[0];
+	prevNode.dest = 0;
+	prevNode.nextElement && queue.push(prevNode.nextElement);
+	// let list = [];
+	console.log('entered grapgh', prevNode);
+	while (queue.length > 0) {
+		let currentNode = queue.shift();
+		console.log('now updating', currentNode);
+		currentNode.visited = true;
+		currentNode.dest = Math.max(prevNode.dest + 1, currentNode.dest);
+		let temp = currentNode;
+		while (temp) {
+			temp = temp.nextElement;
+			temp && !temp.visited && queue.push(temp);
+		}
+	}
+};
+
 const graph = createGraph(0.4, 5);
-
-graph.printGraph();
-// function getRandom(V) {
-// 	return parseInt(Math.random() * (V - 1) + 1);
-// }
-
-// const nodeList = {};
-
-// const answer = getRandomArbitrary(0.5, 20);
-
-// if (answer) nodeList[answer] = null;
-// console.log(nodeList);
-//console.log(newList);
+if (graph) {
+	console.log(graph);
+	BreadthFirstSearch(graph);
+	// newGraph.printGraph();
+}
