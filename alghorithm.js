@@ -174,6 +174,7 @@ class Graph {
 		var it;
 		for (it = 0; it < vertices; it++) {
 			let temp = new LinkedList();
+			temp.insertAtHead(it);
 			this.list.push(temp);
 		}
 	}
@@ -183,8 +184,8 @@ class Graph {
 		if (this.list[source].search(destination)) return null;
 		if (source < this.vertices && destination < this.vertices) {
 			//insert for both vertex in the graph
-			this.list[source].insertAtHead(destination);
-			this.list[destination].insertAtHead(source);
+			this.list[source].insertAtTail(destination);
+			this.list[destination].insertAtTail(source);
 		}
 	}
 
@@ -200,6 +201,15 @@ class Graph {
 			}
 			console.log('null ');
 		}
+	}
+
+	connectedGraph() {
+		for (let i = 0; i < this.list.length; i++) {
+			process.stdout.write('|' + String(i) + '| -> ');
+			console.log('node', i, this.list[i].getHead());
+			if (!this.list[i].getHead().visited) return false;
+		}
+		return true;
 	}
 }
 
@@ -221,32 +231,45 @@ const createGraph = (P, V) => {
 	return graph;
 };
 
-const BreadthFirstSearch = (graph) => {
+const BreadthFirstSearch = (graph, nodeNumber = 0) => {
 	let queue = [];
-	[0, 3, 4];
-	0;
-
-	let prevNode = graph.list[0];
-	prevNode.dest = 0;
-	prevNode.nextElement && queue.push(prevNode.nextElement);
+	let dest = {};
+	let firstNode = graph.list[nodeNumber].getHead();
+	firstNode.dest = 0;
+	let visited = new Set();
+	queue.push(firstNode);
 	// let list = [];
-	console.log('entered grapgh', prevNode);
+	graph.printGraph();
+
 	while (queue.length > 0) {
+		console.log(queue);
 		let currentNode = queue.shift();
-		console.log('now updating', currentNode);
-		currentNode.visited = true;
-		currentNode.dest = Math.max(prevNode.dest + 1, currentNode.dest);
 		let temp = currentNode;
 		while (temp) {
+			temp.visited = true;
+			let originalNode = graph.list[temp.data].getHead();
+			originalNode.dest = Math.min(currentNode.dest + 1, originalNode.dest);
+			!visited.has(temp.data) && queue.push(graph.list[temp.data].getHead());
+			visited.add(temp.data);
+			console.log('temp', temp);
 			temp = temp.nextElement;
-			temp && !temp.visited && queue.push(temp);
 		}
 	}
+	console.log(visited);
+	const res = graph.connectedGraph();
+	console.log(res);
 };
 
-const graph = createGraph(0.4, 5);
-if (graph) {
-	console.log(graph);
-	BreadthFirstSearch(graph);
-	// newGraph.printGraph();
-}
+// const graph = createGraph(0.4, 5);
+// if (graph) {
+// 	console.log(graph);
+// 	BreadthFirstSearch(graph);
+// 	// newGraph.printGraph();
+// }
+
+const testGraph = new Graph(5);
+testGraph.addEdge(0, 1);
+testGraph.addEdge(0, 2);
+testGraph.addEdge(3, 1);
+testGraph.addEdge(3, 4);
+BreadthFirstSearch(testGraph, 2);
