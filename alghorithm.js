@@ -277,13 +277,11 @@ class Graph {
 
 function checkProbability(P, V, returning) {
 	const computedPropability = Math.random();
-	if (P >= computedPropability || returning) return Math.floor(Math.random() * V);
+	if (P <= computedPropability || returning) return Math.floor(Math.random() * V);
 	return null;
 }
 
 const createGraph = (P, V) => {
-	const res = checkProbability(P, V);
-	if (!res) return console.log('not enoght luck, try again');
 	const graph = new Graph(V);
 	for (let i = 1; i < V + 1; i++) {
 		const source = checkProbability(P, V, true);
@@ -306,6 +304,29 @@ testGraph.addEdge(0, 2);
 testGraph.addEdge(3, 1);
 testGraph.addEdge(3, 4);
 //testGraph.BreadthFirstSearch();
-testGraph.connectedGraph();
-testGraph.graphDiameter();
+// testGraph.connectedGraph();
+// testGraph.graphDiameter();
 //testGraph.haveNeighbours();
+
+const threshold = new Array(10);
+
+const threshold1 = Math.log(1000) / 1000;
+
+for (let i = 0; i < threshold.length; i++) {
+	threshold[i] = ((i + 1) * 2 * threshold1) / 10.1;
+}
+
+for (let i = 0; i < threshold.length; i++) {
+	let isConnectedCounter = 0;
+	let isIsolatedCounter = 0;
+
+	for (j = 0; j < 500; j++) {
+		const myGraph = createGraph(threshold[i], 1000);
+		if (myGraph) {
+			myGraph.connectedGraph() && isConnectedCounter++;
+			myGraph.haveNeighbours() && isIsolatedCounter++;
+		}
+	}
+	console.log('connected', isConnectedCounter);
+	console.log('isolated', isIsolatedCounter);
+}
