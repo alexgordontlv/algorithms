@@ -203,6 +203,13 @@ class Graph {
 		}
 	}
 
+	printHeads() {
+		for (let i = 0; i < this.list.length; i++) {
+			console.log(this.list[i].getHead());
+		}
+		return console.log(0);
+	}
+
 	haveNeighbours() {
 		for (let i = 0; i < this.list.length; i++) {
 			if (!this.list[i].getHead().nextElement) return console.log(1);
@@ -211,16 +218,15 @@ class Graph {
 	}
 
 	connectedGraph() {
-		this.BreadthFirstSearch(2);
+		this.BreadthFirstSearch();
 		for (let i = 0; i < this.list.length; i++) {
-			process.stdout.write('|' + String(i) + '| -> ');
-			if (!this.list[i].getHead().visited) return console.log(1);
+			if (!this.list[i].getHead().visited) return console.log('connected: ', 0);
 		}
-		return console.log(0);
+		return console.log('connected: ', 1);
 	}
 
 	graphDiameter() {
-		this.BreadthFirstSearch(0);
+		this.BreadthFirstSearch();
 		let maxDistNode = { node: null, dist: 0 };
 		for (let i = 0; i < this.list.length; i++) {
 			if (this.list[i].getHead().dist > maxDistNode.dist) {
@@ -228,6 +234,8 @@ class Graph {
 				maxDistNode.dist = this.list[i].getHead().dist;
 			}
 		}
+		if (maxDistNode.dist === Number.MAX_SAFE_INTEGER) return console.log('Max distance is:', maxDistNode);
+		this.printHeads();
 		this.BreadthFirstSearch(maxDistNode.node);
 		maxDistNode.node = null;
 		maxDistNode.dist = 0;
@@ -240,19 +248,18 @@ class Graph {
 		console.log('Max distance is:', maxDistNode);
 	}
 
-	BreadthFirstSearch(nodeNumber) {
+	BreadthFirstSearch(nodeNumber = 0) {
 		const graph = this;
-		// for (let i = 0; i < graph.list.length; i++) {
-		// 	const currentNode = graph.list[i].getHead();
-		// 	currentNode.dist = Number.MAX_SAFE_INTEGER;
-		// 	currentNode.visited = false;
-		// }
+		for (let i = 0; i < graph.list.length; i++) {
+			const currentNode = graph.list[i].getHead();
+			currentNode.dist = Number.MAX_SAFE_INTEGER;
+			currentNode.visited = false;
+		}
 		let queue = [];
 		let firstNode = graph.list[nodeNumber].getHead();
 		firstNode.dist = 0;
 		let visited = new Set();
 		queue.push(firstNode);
-		graph.printGraph();
 		while (queue.length > 0) {
 			let currentNode = queue.shift();
 			let temp = currentNode;
@@ -298,7 +305,7 @@ testGraph.addEdge(0, 1);
 testGraph.addEdge(0, 2);
 testGraph.addEdge(3, 1);
 testGraph.addEdge(3, 4);
-// testGraph.BreadthFirstSearch(2);
-// testGraph.connectedGraph();
-// testGraph.graphDiameter();
-testGraph.haveNeighbours();
+//testGraph.BreadthFirstSearch();
+testGraph.connectedGraph();
+testGraph.graphDiameter();
+//testGraph.haveNeighbours();
