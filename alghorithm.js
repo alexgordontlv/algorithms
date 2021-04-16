@@ -2,7 +2,7 @@ class Node {
 	constructor(data) {
 		this.data = data;
 		this.visited = false;
-		this.dest = Number.MAX_SAFE_INTEGER;
+		this.dist = Number.MAX_SAFE_INTEGER;
 		this.nextElement = null;
 	}
 }
@@ -203,13 +203,68 @@ class Graph {
 		}
 	}
 
+	haveNeighbours() {
+		for (let i = 0; i < this.list.length; i++) {
+			if (!this.list[i].getHead().nextElement) return console.log(1);
+		}
+		return console.log(0);
+	}
+
 	connectedGraph() {
+		this.BreadthFirstSearch(2);
 		for (let i = 0; i < this.list.length; i++) {
 			process.stdout.write('|' + String(i) + '| -> ');
-			console.log('node', i, this.list[i].getHead());
-			if (!this.list[i].getHead().visited) return false;
+			if (!this.list[i].getHead().visited) return console.log(1);
 		}
-		return true;
+		return console.log(0);
+	}
+
+	graphDiameter() {
+		this.BreadthFirstSearch(0);
+		let maxDistNode = { node: null, dist: 0 };
+		for (let i = 0; i < this.list.length; i++) {
+			if (this.list[i].getHead().dist > maxDistNode.dist) {
+				maxDistNode.node = i;
+				maxDistNode.dist = this.list[i].getHead().dist;
+			}
+		}
+		this.BreadthFirstSearch(maxDistNode.node);
+		maxDistNode.node = null;
+		maxDistNode.dist = 0;
+		for (let i = 0; i < this.list.length; i++) {
+			if (this.list[i].getHead().dist > maxDistNode.dist) {
+				maxDistNode.node = i;
+				maxDistNode.dist = this.list[i].getHead().dist;
+			}
+		}
+		console.log('Max distance is:', maxDistNode);
+	}
+
+	BreadthFirstSearch(nodeNumber) {
+		const graph = this;
+		// for (let i = 0; i < graph.list.length; i++) {
+		// 	const currentNode = graph.list[i].getHead();
+		// 	currentNode.dist = Number.MAX_SAFE_INTEGER;
+		// 	currentNode.visited = false;
+		// }
+		let queue = [];
+		let firstNode = graph.list[nodeNumber].getHead();
+		firstNode.dist = 0;
+		let visited = new Set();
+		queue.push(firstNode);
+		graph.printGraph();
+		while (queue.length > 0) {
+			let currentNode = queue.shift();
+			let temp = currentNode;
+			while (temp) {
+				temp.visited = true;
+				let originalNode = graph.list[temp.data].getHead();
+				originalNode.dist = Math.min(currentNode.dist + 1, originalNode.dist);
+				!visited.has(temp.data) && queue.push(graph.list[temp.data].getHead());
+				visited.add(temp.data);
+				temp = temp.nextElement;
+			}
+		}
 	}
 }
 
@@ -221,7 +276,7 @@ function checkProbability(P, V, returning) {
 
 const createGraph = (P, V) => {
 	const res = checkProbability(P, V);
-	if (!res) return console.log('not enoght cluck, try again');
+	if (!res) return console.log('not enoght luck, try again');
 	const graph = new Graph(V);
 	for (let i = 1; i < V + 1; i++) {
 		const source = checkProbability(P, V, true);
@@ -229,35 +284,6 @@ const createGraph = (P, V) => {
 		graph.addEdge(source, destination);
 	}
 	return graph;
-};
-
-const BreadthFirstSearch = (graph, nodeNumber = 0) => {
-	let queue = [];
-	let dest = {};
-	let firstNode = graph.list[nodeNumber].getHead();
-	firstNode.dest = 0;
-	let visited = new Set();
-	queue.push(firstNode);
-	// let list = [];
-	graph.printGraph();
-
-	while (queue.length > 0) {
-		console.log(queue);
-		let currentNode = queue.shift();
-		let temp = currentNode;
-		while (temp) {
-			temp.visited = true;
-			let originalNode = graph.list[temp.data].getHead();
-			originalNode.dest = Math.min(currentNode.dest + 1, originalNode.dest);
-			!visited.has(temp.data) && queue.push(graph.list[temp.data].getHead());
-			visited.add(temp.data);
-			console.log('temp', temp);
-			temp = temp.nextElement;
-		}
-	}
-	console.log(visited);
-	const res = graph.connectedGraph();
-	console.log(res);
 };
 
 // const graph = createGraph(0.4, 5);
@@ -272,4 +298,7 @@ testGraph.addEdge(0, 1);
 testGraph.addEdge(0, 2);
 testGraph.addEdge(3, 1);
 testGraph.addEdge(3, 4);
-BreadthFirstSearch(testGraph, 2);
+// testGraph.BreadthFirstSearch(2);
+// testGraph.connectedGraph();
+// testGraph.graphDiameter();
+testGraph.haveNeighbours();
