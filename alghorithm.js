@@ -210,19 +210,19 @@ class Graph {
 		return console.log(0);
 	}
 
-	haveNeighbours() {
+	isIsolated() {
 		for (let i = 0; i < this.list.length; i++) {
-			if (!this.list[i].getHead().nextElement) return console.log(1);
+			if (!this.list[i].getHead().nextElement) return true;
 		}
-		return console.log(0);
+		return false;
 	}
 
 	connectedGraph() {
 		this.BreadthFirstSearch();
 		for (let i = 0; i < this.list.length; i++) {
-			if (!this.list[i].getHead().visited) return console.log('connected: ', 0);
+			if (!this.list[i].getHead().visited) return false;
 		}
-		return console.log('connected: ', 1);
+		return true;
 	}
 
 	graphDiameter() {
@@ -275,28 +275,23 @@ class Graph {
 	}
 }
 
-function checkProbability(P, V, returning) {
-	const computedPropability = Math.random();
-	if (P <= computedPropability || returning) return Math.floor(Math.random() * V);
-	return null;
+function checkProbability(n) {
+	return !!n && Math.random() <= n;
 }
 
 const createGraph = (P, V) => {
 	const graph = new Graph(V);
-	for (let i = 1; i < V + 1; i++) {
-		const source = checkProbability(P, V, true);
-		const destination = checkProbability(P, V, true);
-		graph.addEdge(source, destination);
+	for (let i = 0; i < V + 1; i++) {
+		for (let j = i + 1; j < V; j++) {
+			const res = checkProbability(P);
+			//console.log('computing probability for: ', i, ' ', j, ' =>', res);
+			res && graph.addEdge(i, j);
+		}
 	}
 	return graph;
 };
 
-// const graph = createGraph(0.4, 5);
-// if (graph) {
-// 	console.log(graph);
-// 	BreadthFirstSearch(graph);
-// 	// newGraph.printGraph();
-// }
+// newGraph.printGraph();
 
 const testGraph = new Graph(5);
 testGraph.addEdge(0, 1);
@@ -316,17 +311,22 @@ for (let i = 0; i < threshold.length; i++) {
 	threshold[i] = ((i + 1) * 2 * threshold1) / 10.1;
 }
 
+// const graph = createGraph(0.5, 5);
+// graph.printGraph();
+// graph.connectedGraph();
+// graph.isIsolated();
+const table = {};
 for (let i = 0; i < threshold.length; i++) {
 	let isConnectedCounter = 0;
 	let isIsolatedCounter = 0;
 
 	for (j = 0; j < 500; j++) {
 		const myGraph = createGraph(threshold[i], 1000);
-		if (myGraph) {
-			myGraph.connectedGraph() && isConnectedCounter++;
-			myGraph.haveNeighbours() && isIsolatedCounter++;
-		}
+		myGraph.connectedGraph() && isConnectedCounter++;
+
+		myGraph.isIsolated() && isIsolatedCounter++;
 	}
-	console.log('connected', isConnectedCounter);
-	console.log('isolated', isIsolatedCounter);
+	table[threshold[i]] = { connected: isConnectedCounter, isolated: isIsolatedCounter };
 }
+
+console.table(table);
