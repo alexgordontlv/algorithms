@@ -1,3 +1,7 @@
+const objectstocsv = require('objects-to-csv');
+
+const fs = require('fs');
+
 class Node {
 	constructor(data) {
 		this.data = data;
@@ -234,8 +238,7 @@ class Graph {
 				maxDistNode.dist = this.list[i].getHead().dist;
 			}
 		}
-		if (maxDistNode.dist === Number.MAX_SAFE_INTEGER) return console.log('Max distance is:', maxDistNode);
-		this.printHeads();
+		if (maxDistNode.dist === Number.MAX_SAFE_INTEGER) return maxDistNode.dist;
 		this.BreadthFirstSearch(maxDistNode.node);
 		maxDistNode.node = null;
 		maxDistNode.dist = 0;
@@ -245,7 +248,7 @@ class Graph {
 				maxDistNode.dist = this.list[i].getHead().dist;
 			}
 		}
-		console.log('Max distance is:', maxDistNode);
+		return maxDistNode.dist;
 	}
 
 	BreadthFirstSearch(nodeNumber = 0) {
@@ -303,30 +306,62 @@ testGraph.addEdge(3, 4);
 // testGraph.graphDiameter();
 //testGraph.haveNeighbours();
 
-const threshold = new Array(10);
-
 const threshold1 = Math.log(1000) / 1000;
+const threshold2 = Math.sqrt((2 * Math.log(1000)) / 1000);
 
-for (let i = 0; i < threshold.length; i++) {
-	threshold[i] = ((i + 1) * 2 * threshold1) / 10.1;
-}
-
-// const graph = createGraph(0.5, 5);
-// graph.printGraph();
-// graph.connectedGraph();
-// graph.isIsolated();
-const table = {};
-for (let i = 0; i < threshold.length; i++) {
-	let isConnectedCounter = 0;
-	let isIsolatedCounter = 0;
-
-	for (j = 0; j < 500; j++) {
-		const myGraph = createGraph(threshold[i], 1000);
-		myGraph.connectedGraph() && isConnectedCounter++;
-
-		myGraph.isIsolated() && isIsolatedCounter++;
+const getTreshHoldAray = (threshold) => {
+	const thresholdArray = new Array(10);
+	for (let i = 0; i < thresholdArray.length; i++) {
+		thresholdArray[i] = ((i + 1) * 2 * threshold) / 10.1;
 	}
-	table[threshold[i]] = { connected: isConnectedCounter, isolated: isIsolatedCounter };
-}
+	return thresholdArray;
+};
 
-console.table(table);
+const createTable1 = (thresholdArray) => {
+	const table = [];
+	const graphNumber = 50;
+	for (let i = 0; i < thresholdArray.length; i++) {
+		let isConnectedCounter = 0;
+		let isIsolatedCounter = 0;
+		let diamCounter = 0;
+		for (j = 0; j < graphNumber; j++) {
+			const myGraph = createGraph(thresholdArray[i], 1000);
+		 myGraph.connectedGraph() && isConnectedCounter++;
+		myGraph.isIsolated() && isIsolatedCounter++;	
+		}
+		 table.push({ probability: thresholdArray[i], connected: isConnectedCounter / graphNumber, isolated: isIsolatedCounter / graphNumber });
+	}
+	return table;
+};
+
+
+const createTable2 = (thresholdArray) => {
+	const table = [];
+	const graphNumber = 50;
+	for (let i = 0; i < thresholdArray.length; i++) {
+		let isConnectedCounter = 0;
+		let isIsolatedCounter = 0;
+		let diamCounter = 0;
+		for (j = 0; j < graphNumber; j++) {
+			const myGraph = createGraph(thresholdArray[i], 1000);
+
+			myGraph.graphDiameter() <= 2 diamCounter++;
+		}
+		 table.push({ probability: thresholdArray[i], diam: diamCounter / graphNumber });
+	}
+	return table;
+};
+
+const thresholdArray1 = getTreshHoldAray(threshold1);
+const answer = createVerticlesTable(thresholdArray1);
+console.table(answer);
+let csv = new objectstocsv(answer);
+csv.toDisk('./result1.csv');
+
+const thresholdArray2 = getTreshHoldAray(threshold2);
+const answer2 = createVerticlesTable(thresholdArray2, true);
+let csv2 = new objectstocsv(answer2);
+csv2.toDisk('./result2.csv');
+console.table(answer2);
+
+const totalAnswer = [...answer, {}, {}, {}, ...answer2];
