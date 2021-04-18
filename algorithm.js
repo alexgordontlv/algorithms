@@ -45,29 +45,17 @@ class LinkedList {
 	}
 
 	getHead() {
+		//get the head of the list
 		return this.head;
 	}
 	setHead(newHead) {
+		//setting new head to the list
 		this.head = newHead;
 		return this;
 	}
-	getListStr() {
-		if (this.isEmpty()) {
-			console.log('Empty List');
-			return 'null';
-		} else {
-			let st = '';
-			let temp = this.head;
-			while (temp != null) {
-				st += String(temp.data);
-				st += ' -> ';
-				temp = temp.nextElement;
-			}
-			st += 'null';
-			return st;
-		}
-	}
+
 	insertAtTail(newData) {
+		// insert in lists tail
 		//Creating a new Node with data as newData
 		let node = new Node(newData);
 
@@ -88,82 +76,6 @@ class LinkedList {
 
 		//Make new node the nextElement of last node of list
 		currentNode.nextElement = node;
-		return this;
-	}
-	search(value) {
-		//Start from the first element
-		let currentNode = this.head;
-
-		//Traverse the list until you find the value or reach the end
-		while (currentNode != null) {
-			if (currentNode.data == value) {
-				return true; //value found
-			}
-			currentNode = currentNode.nextElement;
-		}
-		return false; //value not found
-	}
-	deleteAtHead() {
-		//if list is empty, do nothing
-		if (this.isEmpty()) {
-			return this;
-		}
-		//Get the head and first element of the list
-		let firstElement = this.head;
-
-		//If list is not empty, link head to the nextElement of firstElement
-		this.head = firstElement.nextElement;
-
-		return this;
-	}
-	deleteVal(value) {
-		let deleted = null; //True or False
-		//Write code here
-
-		//if list is empty return false
-		if (this.isEmpty()) {
-			return false;
-		}
-
-		//else get pointer to head
-		let currentNode = this.head;
-		// if first node's is the node to be deleted, delete it and return true
-		if (currentNode.data == value) {
-			this.head = currentNode.nextElement;
-			return true;
-		}
-
-		// else traverse the list
-		while (currentNode.nextElement != null) {
-			// if a node whose next node has the value as data, is found, delete it from the list and return true
-			if (currentNode.nextElement.data == value) {
-				currentNode.nextElement = currentNode.nextElement.nextElement;
-				return true;
-			}
-			currentNode = currentNode.nextElement;
-		}
-		//else node was not found, return false
-		deleted = false;
-		return deleted;
-	}
-	deleteAtTail() {
-		// check for the case when linked list is empty
-		if (this.isEmpty()) {
-			return this;
-		}
-		//if linked list is not empty, get the pointer to first node
-		let firstNode = this.head;
-		//check for the corner case when linked list has only one element
-		if (firstNode.nextElement == null) {
-			this.deleteAtHead();
-			return this;
-		}
-		//otherwise traverse to reach second last node
-		while (firstNode.nextElement.nextElement != null) {
-			firstNode = firstNode.nextElement;
-		}
-		//since you have reached second last node, just update its nextElement pointer to point at null, skipping the last node
-		firstNode.nextElement = null;
 		return this;
 	}
 }
@@ -194,6 +106,7 @@ class Graph {
 	}
 
 	printGraph() {
+		//first node is index -> next are linked listed seperated by: ==>
 		console.log('>>Adjacency List of UnDirected Graph<<');
 		var i;
 		for (i = 0; i < this.list.length; i++) {
@@ -208,6 +121,7 @@ class Graph {
 	}
 
 	printHeads() {
+		//printing the heads of each linked list int the grapgh(print all verticles)
 		for (let i = 0; i < this.list.length; i++) {
 			console.log(this.list[i].getHead());
 		}
@@ -215,6 +129,7 @@ class Graph {
 	}
 
 	isIsolated() {
+		//checking if there is a head withoud followers
 		for (let i = 0; i < this.list.length; i++) {
 			if (!this.list[i].getHead().nextElement) return true;
 		}
@@ -222,6 +137,7 @@ class Graph {
 	}
 
 	connectedGraph() {
+		//after BFS if someone have not get a visit : not connected
 		this.BreadthFirstSearch();
 		for (let i = 0; i < this.list.length; i++) {
 			if (!this.list[i].getHead().visited) return false;
@@ -230,6 +146,7 @@ class Graph {
 	}
 
 	graphDiameter() {
+		//BFS from
 		this.BreadthFirstSearch();
 		let maxDistNode = { node: null, dist: 0 };
 		for (let i = 0; i < this.list.length; i++) {
@@ -283,6 +200,7 @@ function checkProbability(n) {
 }
 
 const createGraph = (P, V) => {
+	//foreach 2 possible vertex check possibility for an edge
 	const graph = new Graph(V);
 	for (let i = 0; i < V + 1; i++) {
 		for (let j = i + 1; j < V; j++) {
@@ -293,18 +211,6 @@ const createGraph = (P, V) => {
 	}
 	return graph;
 };
-
-// newGraph.printGraph();
-
-const testGraph = new Graph(5);
-testGraph.addEdge(0, 1);
-testGraph.addEdge(0, 2);
-testGraph.addEdge(3, 1);
-testGraph.addEdge(3, 4);
-//testGraph.BreadthFirstSearch();
-// testGraph.connectedGraph();
-// testGraph.graphDiameter();
-//testGraph.haveNeighbours();
 
 const threshold1 = Math.log(1000) / 1000;
 const threshold2 = Math.sqrt((2 * Math.log(1000)) / 1000);
@@ -319,49 +225,43 @@ const getTreshHoldAray = (threshold) => {
 
 const createTable1 = (thresholdArray) => {
 	const table = [];
-	const graphNumber = 50;
+	const graphNumber = 500;
 	for (let i = 0; i < thresholdArray.length; i++) {
 		let isConnectedCounter = 0;
 		let isIsolatedCounter = 0;
 		let diamCounter = 0;
 		for (j = 0; j < graphNumber; j++) {
 			const myGraph = createGraph(thresholdArray[i], 1000);
-		 myGraph.connectedGraph() && isConnectedCounter++;
-		myGraph.isIsolated() && isIsolatedCounter++;	
+			myGraph.connectedGraph() && isConnectedCounter++;
+			myGraph.isIsolated() && isIsolatedCounter++;
 		}
-		 table.push({ probability: thresholdArray[i], connected: isConnectedCounter / graphNumber, isolated: isIsolatedCounter / graphNumber });
+		table.push({ probability: thresholdArray[i], connected: isConnectedCounter / graphNumber, isolated: isIsolatedCounter / graphNumber });
 	}
 	return table;
 };
 
-
 const createTable2 = (thresholdArray) => {
 	const table = [];
-	const graphNumber = 50;
+	const graphNumber = 500;
 	for (let i = 0; i < thresholdArray.length; i++) {
-		let isConnectedCounter = 0;
-		let isIsolatedCounter = 0;
 		let diamCounter = 0;
 		for (j = 0; j < graphNumber; j++) {
 			const myGraph = createGraph(thresholdArray[i], 1000);
-
-			myGraph.graphDiameter() <= 2 diamCounter++;
+			myGraph.graphDiameter() <= 2 && diamCounter++;
 		}
-		 table.push({ probability: thresholdArray[i], diam: diamCounter / graphNumber });
+		table.push({ probability: thresholdArray[i], diam: diamCounter / graphNumber });
 	}
 	return table;
 };
 
 const thresholdArray1 = getTreshHoldAray(threshold1);
-const answer = createVerticlesTable(thresholdArray1);
+const answer = createTable1(thresholdArray1);
 console.table(answer);
 let csv = new objectstocsv(answer);
 csv.toDisk('./result1.csv');
 
 const thresholdArray2 = getTreshHoldAray(threshold2);
-const answer2 = createVerticlesTable(thresholdArray2, true);
+const answer2 = createTable2(thresholdArray2);
 let csv2 = new objectstocsv(answer2);
 csv2.toDisk('./result2.csv');
 console.table(answer2);
-
-const totalAnswer = [...answer, {}, {}, {}, ...answer2];
