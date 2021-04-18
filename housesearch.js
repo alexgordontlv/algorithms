@@ -1,3 +1,4 @@
+//TO DO
 const blocks = [
 	{
 		gym: false,
@@ -27,9 +28,5 @@ const blocks = [
 ];
 
 const reqs = ['gym', 'school', 'store'];
-
-const newBlocks = blocks.map((block, index) => {
-	for (let i = 0; i < reqs.length; i++) if (block[reqs[i]]) return { reqs[i]: index};
-});
 
 console.log(newBlocks);

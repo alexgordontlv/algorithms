@@ -6,7 +6,7 @@ class TreeNode {
 	}
 }
 
-class BinartSearchTree {
+class BinarySearchTree {
 	constructor() {
 		this.root = null;
 	}
@@ -98,7 +98,7 @@ class BinartSearchTree {
 
 //console.log(BST);
 
-const myNewTree = new BinartSearchTree();
+const myNewTree = new BinarySearchTree();
 myNewTree.insert(20);
 myNewTree.insert(8);
 myNewTree.insert(22);

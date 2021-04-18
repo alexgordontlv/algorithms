@@ -1,3 +1,5 @@
+//TO DO
+
 const myPhone = {
 	1: null,
 	2: ['a', 'b', 'c'],
@@ -12,16 +14,16 @@ const myPhone = {
 };
 
 const phoneEncode = (number, words) => {
-    //const phoneNumberArr = number.toString().split('');
-    const output = [];
-    const encodedWords = words.map(word => {
-        const letters = word.split('')
-        let newWord = letters.map(letter => {
-            for (const key in myPhone) {
-                if(key.includes(letter)){
-                    return key
-                }
-            }
-        })
-    })
-}
+	//const phoneNumberArr = number.toString().split('');
+	const output = [];
+	const encodedWords = words.map((word) => {
+		const letters = word.split('');
+		let newWord = letters.map((letter) => {
+			for (const key in myPhone) {
+				if (key.includes(letter)) {
+					return key;
+				}
+			}
+		});
+	});
+};
