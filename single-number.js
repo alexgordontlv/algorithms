@@ -16,7 +16,14 @@ const singleNumberCached = (array) => {
 	return ans;
 };
 
-//o(n) time
-const singleNumberLinearSpace = () => {};
+//o(n) time, 0(1) space
+const singleNumberLinearSpace = (array) => {
+	let ans = 0;
+	array.forEach((num) => {
+		ans ^= num;
+	});
+	return ans;
+};
 
-console.log(singleNumberCached(nums));
+console.log(singleNumberCached(nums2));
+console.log(singleNumberLinearSpace(nums2));
