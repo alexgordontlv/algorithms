@@ -103,6 +103,27 @@ class BinarySearchTree {
 		if (leftDepth > rightDepth) return leftDepth + 1;
 		else return rightDepth + 1;
 	}
+
+	maxDepthIterative() {
+		const queue = [];
+		let maxDepth = 0;
+		this.root.level = 1;
+		queue.push(this.root);
+		while (queue.length > 0) {
+			const currentNode = queue.shift();
+			maxDepth = Math.max(maxDepth, currentNode.level);
+			if (currentNode.left) {
+				currentNode.left.level = currentNode.level + 1;
+				queue.push(currentNode.left);
+			}
+
+			if (currentNode.right) {
+				currentNode.right.level = currentNode.level + 1;
+				queue.push(currentNode.right);
+			}
+		}
+		return maxDepth;
+	}
 }
 
 //console.log(BST);
@@ -111,14 +132,16 @@ const myNewTree = new BinarySearchTree();
 myNewTree.insert(20);
 myNewTree.insert(8);
 myNewTree.insert(22);
-//myNewTree.insert(4);
+myNewTree.insert(4);
 // myNewTree.insert(2);
-//myNewTree.insert(12);
-//myNewTree.insert(10);
+// myNewTree.insert(12);
+// myNewTree.insert(10);
 // myNewTree.insert(14);
-myNewTree.insert(23);
-myNewTree.insert(233);
+// myNewTree.insert(23);
+// myNewTree.insert(233);
 console.log(myNewTree.maxDepth(myNewTree.root));
+console.log(myNewTree.maxDepthIterative());
+
 //myNewTree.inOrder(myNewTree.root, arr);
 //const ans = myNewTree.lookUp(8);
 // myNewTree.remove(20);

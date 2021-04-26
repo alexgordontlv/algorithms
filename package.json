@@ -2,6 +2,7 @@
   "name": "trainings",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "license": "MIT",
   "dependencies": {
     "object-to-csv": "^1.0.5",
