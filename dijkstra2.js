@@ -9,17 +9,17 @@ class Edge{
 class Graph{
     constructor(numOfNodes){
         this.vertex = numOfNodes;
-        this.nodes = {}
+        this.nodes = new Map()
     }
 
 addEdge(src,dest,weight){
     const edge = new Edge(weight);
     edge.src = src;
     edge.dest = dest;
-    this.nodes[src] = [...this.modes[src], edge]
+    this.nodes.get(src) = [...this.nodes[src], edge]
     edge.src = dest;
     edge.dest = src;
-    this.nodes[dest] = [...this.modes[dest], edge]
+    this.nodes[dest] = [...this.nodes[dest], edge]
 }
 
 printGraph(){
