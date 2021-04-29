@@ -1,35 +1,38 @@
-class Edge{
-    constructor(weight){
-        this.weight = weight;
-        this.src = null;
-        this.dest = null;
-    }
+class Edge {
+	constructor(weight) {
+		this.weight = weight;
+	}
 }
 
-class Graph{
-    constructor(numOfNodes){
-        this.vertex = numOfNodes;
-        this.nodes = new Map()
-    }
+class Graph {
+	constructor(numOfNodes) {
+		this.nodes = {};
+	}
 
-addEdge(src,dest,weight){
-    const edge = new Edge(weight);
-    edge.src = src;
-    edge.dest = dest;
-    this.nodes.get(src) = [...this.nodes[src], edge]
-    edge.src = dest;
-    edge.dest = src;
-    this.nodes[dest] = [...this.nodes[dest], edge]
+	addEdge(src, dest, weight) {
+		const edge = new Edge(weight);
+		if (!this.nodes[src]) {
+			this.nodes[src] = [{ dest: dest, weight }];
+			this.nodes[dest] = [{ dest: src, weight }];
+			console.log('1', this.nodes);
+		} else if (!this.nodes[dest]) {
+			this.nodes[dest] = [{ dest: src, weight }];
+			this.nodes[src] = [...this.nodes[src], { dest: dest, weight }];
+		} else {
+			this.nodes[src] = [...this.nodes[src], { dest: dest, weight }];
+			this.nodes[dest] = [...this.nodes[dest], { dest: src, weight }];
+			console.log('2', this.nodes);
+		}
+	}
+
+	printGraph() {
+		console.log(this.nodes);
+	}
 }
 
-printGraph(){
-    console.log(this.nodes)
-}
+const myGraph = new Graph(5);
+myGraph.addEdge('A', 'B', 2);
+myGraph.addEdge('A', 'C', 3);
+myGraph.addEdge('B', 'C', 4);
 
-}
-
-
-const myGraph = new Graph(5)
-myGraph.addEdge('A','B',2)
-myGraph.printGraph()
-
+myGraph.printGraph();
