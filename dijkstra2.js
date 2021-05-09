@@ -44,23 +44,24 @@ const dijkstra = (graph, startNode) => {
 		let currentNode = Queue.shift();
 		visited.add(currentNode);
 		console.log(currentNode);
-		for (let i = 0; i < currentNode.edges.length; i++) {
-			let shoretsDistance = Math.min(currentNode.edges[i].weight + currentNode.dist, graph.nodes[currentNode.edges[i].dest].dist);
-			graph.nodes[currentNode.edges[i].dest].dist = shoretsDistance;
-			if (!visited.has(graph.nodes[currentNode.edges[i].dest])) Queue.push(graph.nodes[currentNode.edges[i].dest]);
+		for (let node of currentNode.edges) {
+			let shoretsDistance = Math.min(node.weight + currentNode.dist, graph.nodes[node.dest].dist);
+			graph.nodes[node.dest].dist = shoretsDistance;
+			if (!visited.has(graph.nodes[node.dest])) Queue.push(graph.nodes[node.dest]);
 		}
 	}
 };
 
 const myGraph = new Graph(5);
-myGraph.addEdge('A', 'B', 6);
-myGraph.addEdge('A', 'D', 1);
-myGraph.addEdge('D', 'B', 2);
-myGraph.addEdge('B', 'C', 5);
-myGraph.addEdge('D', 'E', 1);
-myGraph.addEdge('B', 'E', 2);
-myGraph.addEdge('E', 'C', 5);
-
+myGraph.addEdge('START', 'A', 5);
+myGraph.addEdge('START', 'B', 2);
+myGraph.addEdge('A', 'C', 4);
+myGraph.addEdge('A', 'D', 2);
+myGraph.addEdge('B', 'A', 8);
+myGraph.addEdge('B', 'D', 7);
+myGraph.addEdge('C', 'D', 6);
+myGraph.addEdge('C', 'FINISH', 3);
+myGraph.addEdge('D', 'FINISH', 1);
 //myGraph.printGraph();
-dijkstra(myGraph, 'A');
+dijkstra(myGraph, 'START');
 myGraph.printGraph();
