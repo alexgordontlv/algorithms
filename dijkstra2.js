@@ -35,7 +35,7 @@ class Graph {
 	}
 }
 
-const dijkstra = (graph, startNode) => {
+const dijkstra = (graph, startNode, finishNode) => {
 	if (!(startNode in graph.nodes)) return 'no such node';
 	graph.nodes[startNode].dist = 0;
 	const Queue = [graph.nodes[startNode]];
@@ -43,13 +43,13 @@ const dijkstra = (graph, startNode) => {
 	while (Queue.length > 0) {
 		let currentNode = Queue.shift();
 		visited.add(currentNode);
-		console.log(currentNode);
 		for (let node of currentNode.edges) {
 			let shoretsDistance = Math.min(node.weight + currentNode.dist, graph.nodes[node.dest].dist);
 			graph.nodes[node.dest].dist = shoretsDistance;
 			if (!visited.has(graph.nodes[node.dest])) Queue.push(graph.nodes[node.dest]);
 		}
 	}
+	return { 'shortest distance to finish': graph.nodes[finishNode].dist };
 };
 
 const myGraph = new Graph(5);
@@ -62,6 +62,7 @@ myGraph.addEdge('B', 'D', 7);
 myGraph.addEdge('C', 'D', 6);
 myGraph.addEdge('C', 'FINISH', 3);
 myGraph.addEdge('D', 'FINISH', 1);
+
+const res = dijkstra(myGraph, 'START', 'FINISH');
+console.log(res);
 //myGraph.printGraph();
-dijkstra(myGraph, 'START');
-myGraph.printGraph();
