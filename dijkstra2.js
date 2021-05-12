@@ -4,7 +4,7 @@ class Node {
 		this.edges = [];
 	}
 }
-const indinity = Number.MAX_SAFE_INTEGER;
+const infinity = Number.MAX_SAFE_INTEGER;
 class Graph {
 	constructor() {
 		this.nodes = {};
@@ -13,14 +13,14 @@ class Graph {
 	addEdge(src, dest, weight) {
 		if (src == dest) return;
 		if (!this.nodes[src]) {
-			this.nodes[src] = { dist: indinity, edges: [{ dest: dest, weight }] };
+			this.nodes[src] = { dist: infinity, edges: [{ dest: dest, weight }] };
 			if (!this.nodes[dest]) {
-				this.nodes[dest] = { dist: indinity, edges: [{ dest: src, weight }] };
+				this.nodes[dest] = { dist: infinity, edges: [{ dest: src, weight }] };
 			} else {
 				this.nodes[dest].edges = [...this.nodes[dest].edges, { dest: src, weight }];
 			}
 		} else if (!this.nodes[dest]) {
-			this.nodes[dest] = { dist: indinity, edges: [{ dest: src, weight }] };
+			this.nodes[dest] = { dist: infinity, edges: [{ dest: src, weight }] };
 			this.nodes[src].edges = [...this.nodes[src].edges, { dest: dest, weight }];
 		} else {
 			this.nodes[src].edges = [...this.nodes[src].edges, { dest: dest, weight }];
