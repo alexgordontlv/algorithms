@@ -28,5 +28,5 @@ const kmp = (str, pattern) => {
 	return -1;
 };
 
-const ans = kmp2(str, pattern);
+const ans = kmp(str, pattern);
 console.log(ans);
