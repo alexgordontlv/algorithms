@@ -10,32 +10,23 @@ const prefixSufix = (str) => {
 	}
 	return preTable;
 };
-const str = 'adsgwadsdsgwadsgzxz';
+const str = 'adsgwadsxdsgwadsgz';
 const pattern = 'dsgwadsgz';
 
 const kmp = (str, pattern) => {
 	const prefixTable = prefixSufix(pattern);
-	let j = 0;
-	let lastidx = 0;
-	for (let i = 0; i < str.length; ) {
-		if (str[i] === pattern[j] && j === 0) lastidx = i;
+	let [i, j, lastIdx] = [0, 0, 0];
+	while (i < str.length) {
 		if (str[i] === pattern[j]) {
+			if (j === 0) lastIdx = i;
 			i++;
 			j++;
-		}
-
-		if (j == pattern.length) {
-			return { idx: lastidx, found: true };
-		} else if (i < str.length && str[i] !== pattern[j]) {
-			if (j > 0) {
-				j = prefixTable[j - 1];
-			} else {
-				i++;
-			}
-		}
+		} else i++;
+		if (j === pattern.length) return lastIdx;
+		if (str[i] !== pattern[j] && j > 0) j = prefixTable[j - 1];
 	}
-	return false;
+	return -1;
 };
 
-const ans = kmp(str, pattern);
+const ans = kmp2(str, pattern);
 console.log(ans);
