@@ -53,15 +53,16 @@ const dijkstra = (graph, startNode, finishNode) => {
 };
 
 const myGraph = new Graph(5);
-myGraph.addEdge('START', 'A', 5);
-myGraph.addEdge('START', 'B', 2);
-myGraph.addEdge('A', 'C', 4);
-myGraph.addEdge('A', 'D', 2);
-myGraph.addEdge('B', 'A', 8);
-myGraph.addEdge('B', 'D', 7);
-myGraph.addEdge('C', 'D', 6);
-myGraph.addEdge('C', 'FINISH', 3);
-myGraph.addEdge('D', 'FINISH', 1);
+myGraph.addEdge('START', 'A', 16);
+myGraph.addEdge('START', 'B', 13);
+myGraph.addEdge('A', 'C', 12);
+myGraph.addEdge('A', 'B', 10);
+myGraph.addEdge('B', 'A', 4);
+myGraph.addEdge('B', 'D', 14);
+myGraph.addEdge('C', 'B', 9);
+myGraph.addEdge('D', 'C', 7);
+myGraph.addEdge('C', 'FINISH', 20);
+myGraph.addEdge('D', 'FINISH', 4);
 
 const res = dijkstra(myGraph, 'START', 'FINISH');
 console.log(res);

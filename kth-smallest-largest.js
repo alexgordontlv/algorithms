@@ -30,7 +30,6 @@ const kthsmallest = (array, k) => {
 	while (left < right) {
 		let target = array.length - k;
 		console.log('target', target);
-
 		let idx = partition(array);
 		console.log(array);
 		console.log(idx);
