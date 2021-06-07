@@ -1,19 +1,20 @@
 const Get_summary = (array, options) => {
+	const myHash = {};
 	const newOption = Object.keys(options);
-	const newhash = array.reduce((myHash, user) => {
+	array.forEach((user) => {
 		const newUser = {};
 		for (option of newOption) {
 			newUser[option] = user[option];
 		}
 		const stringNewUser = JSON.stringify(Object.values(newUser));
-		if (myHash[stringNewUser]) {
+		if (stringNewUser in myHash) {
 			myHash[stringNewUser].Bytes += user.Bytes;
 		} else {
 			myHash[stringNewUser] = user;
 		}
-	}, {});
+	});
 
-	return newhash;
+	return Object.values(myHash);
 };
 
 arr = [
